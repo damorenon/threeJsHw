@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+			canvas { display: block; }
+		</style>
+	</head>
+	<body>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+		<script>
+			var scene = new THREE.Scene();
+			//camera: (field of view in dregrees, aspect ratio, near, far)
+			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+			//renderer: this is where the magic happens. I
+			var renderer = new THREE.WebGLRenderer();
+			//we also need to set the size at which we want it to render our app. Generally, the width and height of the area we want to fill with our app
+			//in this case, the width and height of the browser window
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			//we add the renderer element to our HTML document. This is a <canvas> element the renderer uses to display the scene to us.
+			document.body.appendChild( renderer.domElement );
+
+			//To create a cube, we need a BoxGeometry. This is an object that contains all the points (vertices) and fill (faces) of the cube. 
+			var geometry = new THREE.BoxGeometry();
+			//In addition to the geometry, we need a material to color it.
+			var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+			//A mesh is an object that takes a geometry, and applies a material to it, which we then can insert to our scene, and move freely around.
+			var cube = new THREE.Mesh( geometry, material );
+			//By default, when we call scene.add(), the thing we add will be added to the coordinates (0,0,0). 
+			//This would cause both the camera and the cube to be inside each other. To avoid this, we simply move the camera out a bit.
+			scene.add( cube );
+			camera.position.z = 5;
+
+			//This will create a loop that causes the renderer to draw the scene every time the screen is refreshed (on a typical screen this means 60 times per second)
+			//requestAnimationFrame advantages: it pauses when the user navigates to another browser tab, hence not wasting their processing power and battery life.
+			function animate() {
+				requestAnimationFrame( animate );
+				//anything you want to move or change while the app is running has to go through the animate loop
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+				renderer.render( scene, camera );
+			}
+			animate();
+		</script>
+	</body>
+</html>
